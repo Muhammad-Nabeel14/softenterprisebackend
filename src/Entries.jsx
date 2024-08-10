@@ -70,7 +70,7 @@ const Entries = () => {
         </Box>
       ) : (
         <TableContainer component={Paper}>
-          <Table aria-label="entries table">
+          <Table aria-label="entries table" size="small">
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -122,28 +122,30 @@ const Entries = () => {
           <Grid container spacing={2}>
             {selectedImages.map((src, index) => (
               <Grid item xs={12} sm={6} md={4} key={index}>
-                <div style={{
-                  width: '200px',
-                  height: '200px',
-                  padding: '8px',
-                  border: '2px solid black',
-                  borderRadius: '4px',
-                  overflow: 'hidden',
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}>
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: 'auto',
+                    padding: 1,
+                    border: '2px solid black',
+                    borderRadius: 1,
+                    overflow: 'hidden',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
                   <img
                     src={`https://sebackend-8rm0.onrender.com${src}`}
                     alt={`Product Image ${index}`}
                     style={{
                       width: '100%',
-                      height: '100%',
+                      height: 'auto',
                       objectFit: 'cover',
                       borderRadius: '4px'
                     }}
                   />
-                </div>
+                </Box>
               </Grid>
             ))}
           </Grid>
