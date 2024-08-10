@@ -38,13 +38,9 @@ export default function Navbar() {
             flexDirection: isMobile ? 'row' : 'row'
           }}
         >
-          {isMobile && (
-            <IconButton edge="start" color="inherit" aria-label="menu">
-              <MenuIcon />
-            </IconButton>
-          )}
+          
           {userId && (
-            <Button color="inherit" onClick={handleLogout} sx={{ display: isMobile ? 'none' : 'block' }}>
+            <Button color="inherit" onClick={handleLogout} sx={{ display: 'block' }}>
               Logout
             </Button>
           )}
