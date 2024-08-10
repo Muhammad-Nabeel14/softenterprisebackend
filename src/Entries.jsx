@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, Grid, IconButton, CircularProgress, Box, Typography } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button, Dialog, DialogTitle, DialogContent, Grid, IconButton, CircularProgress, Box, Typography, TablePagination, Container } from '@mui/material';
 import { PhotoCamera, Close } from '@mui/icons-material';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,8 @@ const Entries = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,8 +44,17 @@ const Entries = () => {
     navigate(-1);
   };
 
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
-    <>
+    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
       <Button
         variant="outlined"
         color="secondary"
@@ -69,37 +80,65 @@ const Entries = () => {
           </Typography>
         </Box>
       ) : (
-        <TableContainer component={Paper}>
-          <Table aria-label="entries table" size="small">
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Quantity</TableCell>
-                <TableCell>Price</TableCell>
-                <TableCell>View Images</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {entries.map((entry) => (
-                <TableRow key={entry._id}>
-                  <TableCell>{entry.name}</TableCell>
-                  <TableCell>{entry.quantity}</TableCell>
-                  <TableCell>{entry.price}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="outlined"
-                      color="primary"
-                      startIcon={<PhotoCamera />}
-                      onClick={() => handleViewImages(entry.pictures)}
-                    >
-                      View Images
-                    </Button>
-                  </TableCell>
+        <>
+          <TableContainer component={Paper}>
+            <Table aria-label="entries table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Quantity</TableCell>
+                  <TableCell>Price</TableCell>
+                  <TableCell>View Images</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {entries.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((entry, index) => (
+                  <TableRow key={entry._id} sx={{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#ffffff' }}>
+                    <TableCell>{entry.name}</TableCell>
+                    <TableCell>{entry.quantity}</TableCell>
+                    <TableCell>{entry.price}</TableCell>
+                    <TableCell>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        startIcon={<PhotoCamera />}
+                        onClick={() => handleViewImages(entry.pictures)}
+                      >
+                        View Images
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={entries.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+              sx={{
+                '& .MuiTablePagination-select': {
+                  backgroundColor: '#f5f5f5',
+                  borderRadius: '4px',
+                },
+                '& .MuiTablePagination-selectIcon': {
+                  color: '#2B6777', // Deep Teal color for the select icon
+                },
+                '& .MuiTablePagination-toolbar': {
+                  minHeight: '48px',
+                },
+                '& .MuiTablePagination-caption': {
+                  color: '#1C1C1C', // Dark Gray color for text
+                }
+              }}
+            />
+          </Box>
+        </>
       )}
 
       <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
@@ -125,10 +164,10 @@ const Entries = () => {
                 <Box
                   sx={{
                     width: '100%',
-                    height: 'auto',
-                    padding: 1,
+                    height: '200px',
+                    padding: '8px',
                     border: '2px solid black',
-                    borderRadius: 1,
+                    borderRadius: '4px',
                     overflow: 'hidden',
                     display: 'flex',
                     justifyContent: 'center',
@@ -140,9 +179,9 @@ const Entries = () => {
                     alt={`Product Image ${index}`}
                     style={{
                       width: '100%',
-                      height: 'auto',
+                      height: '100%',
                       objectFit: 'cover',
-                      borderRadius: '4px'
+                      borderRadius: '4px',
                     }}
                   />
                 </Box>
@@ -151,7 +190,7 @@ const Entries = () => {
           </Grid>
         </DialogContent>
       </Dialog>
-    </>
+    </Container>
   );
 };
 
