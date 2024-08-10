@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Formik, Field, Form } from 'formik';
 import * as Yup from 'yup';
-import { TextField, Button, Box, Typography, InputLabel, Grid, IconButton } from '@mui/material';
+import { TextField, Button, Box, Typography, InputLabel, Grid, IconButton, CircularProgress } from '@mui/material';
 import { PhotoCamera, Close } from '@mui/icons-material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,6 +12,7 @@ import Cookies from 'js-cookie';
 const ProductForm = () => {
   const [previewImages, setPreviewImages] = useState([]);
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
@@ -47,6 +48,8 @@ const ProductForm = () => {
     formData.append('quantity', values.quantity);
     uploadedFiles.forEach(file => formData.append('pictures', file));
 
+    setLoading(true); // Start loading
+
     try {
       const response = await fetch('https://sebackend-8rm0.onrender.com/products', {
         method: 'POST',
@@ -63,6 +66,8 @@ const ProductForm = () => {
     } catch (error) {
       toast.error('An error occurred: ' + error.message);
       console.error('Error:', error);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -176,8 +181,9 @@ const ProductForm = () => {
                   variant="contained"
                   color="primary"
                   fullWidth
+                  disabled={loading} // Disable button while loading
                 >
-                  Submit
+                  {loading ? <CircularProgress size={24} /> : 'Submit'} // Show loader if loading
                 </Button>
                 <Button
                   variant="outlined"
