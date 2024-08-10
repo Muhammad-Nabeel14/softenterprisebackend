@@ -183,7 +183,7 @@ const ProductForm = () => {
                   fullWidth
                   disabled={loading} // Disable button while loading
                 >
-                  {loading ? <CircularProgress size={24} /> : 'Submit'} // Show loader if loading
+                  {loading ? <CircularProgress size={24} /> : 'Submit'} 
                 </Button>
                 <Button
                   variant="outlined"
