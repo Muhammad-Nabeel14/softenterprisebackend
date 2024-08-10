@@ -22,10 +22,10 @@ const ProductForm = () => {
   });
 
   const handleFileChange = (event, setFieldValue) => {
-    if (uploadedFiles.length >5) {
-        toast.error('You cannot select more than 6 images.');
-        return;
-      }
+    if (uploadedFiles.length > 5) {
+      toast.error('You cannot select more than 6 images.');
+      return;
+    }
     const files = Array.from(event.target.files);
     setFieldValue("pictures", [...uploadedFiles, ...files]);
 
@@ -46,10 +46,10 @@ const ProductForm = () => {
       toast.error('You must select at least one image.');
       return;
     }
-    if (uploadedFiles.length >6) {
-        toast.error('You cannot select more than 6 images.');
-        return;
-      }
+    if (uploadedFiles.length > 5) {
+      toast.error('You cannot select more than 6 images.');
+      return;
+    }
 
     const formData = new FormData();
     const userId = Cookies.get('userId');
@@ -165,11 +165,16 @@ const ProductForm = () => {
                   <Grid container spacing={2}>
                     {previewImages.map((preview, index) => (
                       <Grid item xs={6} sm={4} md={3} key={index} sx={{ position: 'relative' }}>
-                        
                         <img
                           src={preview.src}
                           alt={`preview ${index}`}
-                          style={{ width: '100%', height: 'auto', borderRadius: '4px' ,border:"1px solid black"}}
+                          style={{
+                            width: '100%',
+                            height: '100px', // Set a fixed height
+                            objectFit: 'cover', // Ensures image covers the container
+                            borderRadius: '4px',
+                            border: '1px solid black'
+                          }}
                         />
                         <IconButton
                           size="small"
