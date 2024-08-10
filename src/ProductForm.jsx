@@ -6,7 +6,6 @@ import { PhotoCamera, Close } from '@mui/icons-material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
-
 import Cookies from 'js-cookie';
 
 const ProductForm = () => {
@@ -19,10 +18,14 @@ const ProductForm = () => {
     name: Yup.string().min(3, 'Name must be at least 3 characters').required('Required'),
     price: Yup.number().positive('Price must be positive').required('Required'),
     quantity: Yup.number().integer('Quantity must be an integer').positive('Quantity must be positive').required('Required'),
-    pictures: Yup.array().min(1, 'At least one image is required').max(6, 'Cannot upload more than 6 images')
+    pictures: Yup.array()
   });
 
   const handleFileChange = (event, setFieldValue) => {
+    if (uploadedFiles.length >5) {
+        toast.error('You cannot select more than 6 images.');
+        return;
+      }
     const files = Array.from(event.target.files);
     setFieldValue("pictures", [...uploadedFiles, ...files]);
 
@@ -39,6 +42,15 @@ const ProductForm = () => {
   };
 
   const handleSubmit = async (values) => {
+    if (uploadedFiles.length === 0) {
+      toast.error('You must select at least one image.');
+      return;
+    }
+    if (uploadedFiles.length >6) {
+        toast.error('You cannot select more than 6 images.');
+        return;
+      }
+
     const formData = new FormData();
     const userId = Cookies.get('userId');
 
@@ -48,7 +60,7 @@ const ProductForm = () => {
     formData.append('quantity', values.quantity);
     uploadedFiles.forEach(file => formData.append('pictures', file));
 
-    setLoading(true); // Start loading
+    setLoading(true);
 
     try {
       const response = await fetch('https://sebackend-8rm0.onrender.com/products', {
@@ -67,7 +79,7 @@ const ProductForm = () => {
       toast.error('An error occurred: ' + error.message);
       console.error('Error:', error);
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -153,10 +165,11 @@ const ProductForm = () => {
                   <Grid container spacing={2}>
                     {previewImages.map((preview, index) => (
                       <Grid item xs={6} sm={4} md={3} key={index} sx={{ position: 'relative' }}>
+                        
                         <img
                           src={preview.src}
                           alt={`preview ${index}`}
-                          style={{ width: '100%', height: 'auto', borderRadius: '4px' }}
+                          style={{ width: '100%', height: 'auto', borderRadius: '4px' ,border:"1px solid black"}}
                         />
                         <IconButton
                           size="small"
@@ -181,9 +194,9 @@ const ProductForm = () => {
                   variant="contained"
                   color="primary"
                   fullWidth
-                  disabled={loading} // Disable button while loading
+                  disabled={loading}
                 >
-                  {loading ? <CircularProgress size={24} /> : 'Submit'} 
+                  {loading ? <CircularProgress size={24} /> : 'Submit'}
                 </Button>
                 <Button
                   variant="outlined"
