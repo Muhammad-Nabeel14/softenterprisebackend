@@ -19,6 +19,8 @@ const Entries = () => {
       try {
         const response = await fetch(`https://sebackend-8rm0.onrender.com/products/user/${userId}`);
         const data = await response.json();
+        console.log(data);
+        
         setEntries(data);
       } catch (error) {
         console.error('Error fetching entries:', error);
@@ -31,6 +33,8 @@ const Entries = () => {
   }, []);
 
   const handleViewImages = (images) => {
+    console.log(images);
+    
     setSelectedImages(images);
     setOpen(true);
   };
@@ -52,6 +56,8 @@ const Entries = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const isEntriesArray = Array.isArray(entries);
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -77,6 +83,20 @@ const Entries = () => {
           <CircularProgress sx={{ mb: 2 }} />
           <Typography variant="h6" color="textSecondary">
             We are loading your documents...
+          </Typography>
+        </Box>
+      ) : !isEntriesArray ? (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '50vh',
+          }}
+        >
+          <Typography variant="h6" color="textSecondary">
+            {entries.message || 'You have no entries.'}
           </Typography>
         </Box>
       ) : (
@@ -177,6 +197,7 @@ const Entries = () => {
                   <img
                     src={`https://sebackend-8rm0.onrender.com${src}`}
                     alt={`Product Image ${index}`}
+                    
                     style={{
                       width: '100%',
                       height: '100%',
