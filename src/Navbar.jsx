@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -14,6 +14,12 @@ export default function Navbar() {
   const isMobile = useMediaQuery('(max-width:600px)');
   const navigate = useNavigate(); 
   const userId = Cookies.get('userId');
+
+  useEffect(() => {
+    if (Cookies.get('userId')) {
+      Cookies.remove('userId');
+    }
+  }, []);
 
   const handleLogout = () => {
     Cookies.remove('userId');
@@ -38,9 +44,13 @@ export default function Navbar() {
             flexDirection: isMobile ? 'row' : 'row'
           }}
         >
-          
+          {isMobile && (
+            <IconButton edge="start" color="inherit" aria-label="menu">
+              <MenuIcon />
+            </IconButton>
+          )}
           {userId && (
-            <Button color="inherit" onClick={handleLogout} sx={{ display: 'block' }}>
+            <Button color="inherit" onClick={handleLogout} sx={{ display: isMobile ? 'none' : 'block' }}>
               Logout
             </Button>
           )}
