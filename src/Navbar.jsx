@@ -15,12 +15,7 @@ export default function Navbar() {
   const navigate = useNavigate(); 
   const userId = Cookies.get('userId');
 
-  useEffect(() => {
-    if (userId) {
-      console.log("User ID detected, removing it.");
-      Cookies.remove('userId');
-    }
-  }, [userId]);
+  
 
   const handleLogout = () => {
     Cookies.remove('userId');
