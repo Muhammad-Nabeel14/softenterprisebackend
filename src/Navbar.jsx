@@ -15,7 +15,13 @@ export default function Navbar() {
   const navigate = useNavigate(); 
   const userId = Cookies.get('userId');
 
-  
+    useEffect(() => {
+    if (Cookies.get('userId')) {
+      console.log("hiiii");
+      
+      Cookies.remove('userId');
+    }
+  }, []);
 
   const handleLogout = () => {
     Cookies.remove('userId');
@@ -37,16 +43,16 @@ export default function Navbar() {
             alignItems: 'center', 
             ml: 'auto', 
             gap: 1,
-            flexDirection: 'row' // Keep row direction for both mobile and desktop
+            flexDirection: 'row' 
           }}
         >
-          {/* Remove MenuIcon completely for mobile */}
+        
           {userId && (
             <Button 
               color="inherit" 
               onClick={handleLogout} 
               sx={{ 
-                display: 'block' // Ensure button is always displayed
+                display: 'block' 
               }}
             >
               Logout
